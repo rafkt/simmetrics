@@ -1,4 +1,4 @@
-/*
+/*-
  * #%L
  * Simmetrics Examples
  * %%

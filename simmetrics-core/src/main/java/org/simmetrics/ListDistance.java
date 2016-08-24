@@ -1,4 +1,4 @@
-/*
+/*-
  * #%L
  * Simmetrics Core
  * %%
@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.simmetrics;
 
 import java.util.Collections;
