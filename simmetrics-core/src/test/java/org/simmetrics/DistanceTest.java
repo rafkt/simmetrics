@@ -30,9 +30,12 @@ import static org.junit.Assert.fail;
 import static org.simmetrics.matchers.ImplementsToString.implementsToString;
 import static org.simmetrics.matchers.ToStringContainsSimpleClassName.toStringContainsSimpleClassName;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Arrays;
+import java.util.Objects;
 
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 @SuppressWarnings("javadoc")
 public abstract class DistanceTest<K> {
@@ -82,7 +85,8 @@ public abstract class DistanceTest<K> {
 	private static <K> void testRange(Distance<K> metric, K a, K b) {
 		float similarity = metric.distance(a, b);
 		String message1 = String.format(
-				"Distance %s-%s %f must be non-negative", a, b, similarity);
+				"Distance %s-%s %f must be non-negative", print(a), print(b),
+				similarity);
 		assertTrue(message1, 0.0f <= similarity);
 	}
 
@@ -93,7 +97,7 @@ public abstract class DistanceTest<K> {
 	private static <K> void testDistance(Distance<K> metric, K a, K b,
 			float expected, float delta) {
 		float similarity = metric.distance(a, b);
-		String message = String.format("\"%s\" vs \"%s\"", a, b);
+		String message = String.format("\"%s\" vs \"%s\"", print(a), print(b));
 		assertEquals(message, expected, similarity, delta);
 	}
 
@@ -113,9 +117,18 @@ public abstract class DistanceTest<K> {
 		float distanceReversed = metric.distance(b, a);
 
 		String message = String.format(
-				"Distance relation \"%s\" vs \"%s\" must be symmetric", a, b);
+				"Distance relation \"%s\" vs \"%s\" must be symmetric",
+				print(a), print(b));
 		assertEquals(message, distanceReversed, distance, delta);
 
+	}
+
+	private static <K> String print(K k) {
+		if (k instanceof int[]) {
+			return Arrays.toString((int[]) k);
+		}
+
+		return Objects.toString(k);
 	}
 
 	protected float delta;
@@ -141,8 +154,8 @@ public abstract class DistanceTest<K> {
 	protected boolean satisfiesSubadditivity() {
 		return true;
 	}
-	
-	protected boolean toStringIncludesSimpleClassName(){
+
+	protected boolean toStringIncludesSimpleClassName() {
 		return true;
 	}
 
@@ -251,13 +264,14 @@ public abstract class DistanceTest<K> {
 	public final void shouldImplementToString() {
 		assertThat(metric, implementsToString());
 	}
-	
+
 	@Test
+	@Ignore
 	public final void shouldContainSimpleClassNameToString() {
-		if(toStringIncludesSimpleClassName()){
+		if (toStringIncludesSimpleClassName()) {
 			assertThat(metric, toStringContainsSimpleClassName());
 		} else {
-			assertThat(metric, not(toStringContainsSimpleClassName()));	
+			assertThat(metric, not(toStringContainsSimpleClassName()));
 		}
 	}
 

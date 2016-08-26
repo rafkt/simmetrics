@@ -32,6 +32,11 @@ final class Math {
 	private Math() {
 		// Utility class
 	}
+	
+	public static <K> boolean equals(K a, K b) {
+		return (a == b) || (a != null && a.equals(b));
+	}
+	
 	static float max(float a, float b, float c) {
 		return java.lang.Math.max(java.lang.Math.max(a, b), c);
 	}

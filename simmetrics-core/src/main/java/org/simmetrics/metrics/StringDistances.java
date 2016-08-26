@@ -65,7 +65,7 @@ public final class StringDistances {
 	 * @return a damerau levenshtein metric
 	 */
 	public static StringDistance damerauLevenshtein() {
-		return new DamerauLevenshtein();
+		return DamerauLevenshtein.forStrings();
 	}
 
 	/**

@@ -20,9 +20,9 @@
 package org.simmetrics;
 
 /**
- * Measures the unnormalized dissimilarity between two strings. The
+ * Measures the unnormalized dissimilarity between code point arrays. The
  * measurement results in a non-negative value. A value of zero indicates that
- * the strings are similar.
+ * the arrays are similar.
  * <p>
  * The distance measure should be consistent with equals such that
  * {@code a.equals(b) =>
@@ -44,10 +44,10 @@ package org.simmetrics;
  * @see <a href="https://en.wikipedia.org/wiki/Metric_(mathematics)">Wikipedia -
  *      Metric</a>
  */
-public interface StringDistance extends Distance<String> {
+public interface CodePointDistance extends Distance<int[]> {
 	/**
-	 * Measures the distance between string a and b. The measurement results in a
-	 * non-negative value. A value of {@code 0.0} indicates that {@code a} and
+	 * Measures the distance between code point arrays a and b. The measurement results in
+	 * a non-negative value. A value of {@code 0.0} indicates that {@code a} and
 	 * {@code b} are similar.
 	 * 
 	 * @param a
@@ -59,5 +59,5 @@ public interface StringDistance extends Distance<String> {
 	 *             when either a or b is null
 	 */
 	@Override
-	float distance(String a, String b);
+	float distance(int[] a, int[] b);
 }

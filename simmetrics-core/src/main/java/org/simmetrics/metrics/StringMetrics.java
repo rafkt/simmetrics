@@ -86,7 +86,7 @@ public final class StringMetrics {
 	 * @see DamerauLevenshtein
 	 */
 	public static StringMetric damerauLevenshtein() {
-		return new DamerauLevenshtein();
+		return DamerauLevenshtein.forStrings();
 	}
 
 	/**
@@ -581,6 +581,8 @@ public final class StringMetrics {
 		public String toString() {
 			return metric + " [" + tokenizer + "]";
 		}
+
+
 	}
 
 	static final class ForListWithSimplifier implements StringMetric {
