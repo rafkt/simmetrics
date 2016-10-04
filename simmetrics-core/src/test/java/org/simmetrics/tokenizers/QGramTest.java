@@ -23,197 +23,218 @@ package org.simmetrics.tokenizers;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @SuppressWarnings("javadoc")
 @RunWith(Enclosed.class)
 public class QGramTest {
 
-	public static final class QGram1 extends TokenizerTest {
+    private static String fromCodePoints(int... codePoints){
+        return new String(codePoints, 0, codePoints.length);
+    }
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGram(1);
+    // Unicode Character 'ACUTE ACCENT' (U+00B4) a combining diacritic
+    private static final String acute_accent = fromCodePoints(0x00B4);
 
-		}
+    // Surrogate pairs from Linear A (U+1060x for x = 0..2)
+    private static final String linearAOne = fromCodePoints(0x10600);
+    private static final String linearATwo = fromCodePoints(0x10601);
+    private static final String linearAThree = fromCodePoints(0x10602);
 
-		@Override
-		protected T[] getTests() {
+    public static final class QGram1 extends TokenizerTest {
 
-			return new T[] {
-					new T(""),
-					new T("1", "1"),
-					new T("12", "1", "2"),
-					new T("123456789",
-					// Expected output
-							"1", "2", "3", "4", "5", "6", "7", "8", "9"),
-					new T("123456789123456789",
-							// Expected output
-							"1", "2", "3", "4", "5", "6", "7", "8", "9", "1",
-							"2", "3", "4", "5", "6", "7", "8", "9"),
-					new T("Héllo",
-					// Diacritics are their own code point
-							"H", "e", "́", "l", "l", "o"),
-					// Linear-A surrogate pairs, pairs should be kept together
-					new T("𐘀𐘁𐘂", "𐘀", "𐘁", "𐘂") };
-		}
-	}
 
-	public static final class QGram2WithPadding extends TokenizerTest {
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGram(1);
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGramExtended(2, "@", "@");
-		}
+        }
 
-		@Override
-		protected T[] getTests() {
+        @Override
+        protected T[] getTests() {
 
-			return new T[] { new T(""), new T("1", "@1", "1@"),
-					new T("12", "@1", "12", "2@") };
-		}
-	}
+            return new T[]{
+                    new T(""),
+                    new T("1", "1"),
+                    new T("12", "1", "2"),
+                    new T("123456789",
+                            // Expected output
+                            "1", "2", "3", "4", "5", "6", "7", "8", "9"),
+                    new T("123456789123456789",
+                            // Expected output
+                            "1", "2", "3", "4", "5", "6", "7", "8", "9", "1",
+                            "2", "3", "4", "5", "6", "7", "8", "9"),
+                    new T("He" + acute_accent + "llo",
+                            // Diacritics are their own code point
+                            "H", "e", acute_accent, "l", "l", "o"),
+                    // Linear-A surrogate pairs, pairs should be kept together
+                    new T(linearAOne + linearATwo + linearAThree, linearAOne, linearATwo, linearAThree)
+            };
+        }
+    }
 
-	public static final class QGram2WithTwoSidedPadding extends TokenizerTest {
+    public static final class QGram2WithPadding extends TokenizerTest {
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGramExtended(2, "L", "R");
-		}
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGramExtended(2, "@", "@");
+        }
 
-		@Override
-		protected T[] getTests() {
+        @Override
+        protected T[] getTests() {
 
-			return new T[] { new T(""), new T("1", "L1", "1R"),
-					new T("12", "L1", "12", "2R") };
-		}
-	}
+            return new T[]{new T(""), new T("1", "@1", "1@"),
+                    new T("12", "@1", "12", "2@")
+            };
+        }
+    }
 
-	public static final class QGram2WithDefaultPadding extends TokenizerTest {
+    public static final class QGram2WithTwoSidedPadding extends TokenizerTest {
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGramExtended(2);
-		}
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGramExtended(2, "L", "R");
+        }
 
-		@Override
-		protected T[] getTests() {
+        @Override
+        protected T[] getTests() {
 
-			return new T[] {
-					new T(""),
-					new T("1", "#1", "1#"),
-					new T("12", "#1", "12", "2#"),
-					new T("123", "#1", "12", "23", "3#"),
+            return new T[]{new T(""), new T("1", "L1", "1R"),
+                    new T("12", "L1", "12", "2R")
+            };
+        }
+    }
 
-					new T("123456789", "#1", "12", "23", "34", "45", "56",
-							"67", "78", "89", "9#"),
-					new T("123456789123456789", "#1", "12", "23", "34", "45",
-							"56", "67", "78", "89", "91", "12", "23", "34",
-							"45", "56", "67", "78", "89", "9#") };
-		}
-	}
+    public static final class QGram2WithDefaultPadding extends TokenizerTest {
 
-	public static final class QGram2 extends TokenizerTest {
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGramExtended(2);
+        }
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGram(2);
-		}
+        @Override
+        protected T[] getTests() {
 
-		@Override
-		protected T[] getTests() {
+            return new T[]{
+                    new T(""),
+                    new T("1", "#1", "1#"),
+                    new T("12", "#1", "12", "2#"),
+                    new T("123", "#1", "12", "23", "3#"),
 
-			return new T[] {
-					new T(""),
-					new T("1", "1"),
-					new T("12", "12"),
-					new T("123456789",
-					// Expected output
-							"12", "23", "34", "45", "56", "67", "78", "89"),
-					new T("123456789123456789",
-							// Expected output
-							"12", "23", "34", "45", "56", "67", "78", "89",
-							"91", "12", "23", "34", "45", "56", "67", "78",
-							"89"), 
-					new T("Héllo",
-					// Diacritics are their own code point
-							"He", "é", "́l", "ll", "lo"),
-					// Linear-A 
-					// tokenizer should split on code points
-					new T("𐘀𐘁𐘂","𐘀𐘁", "𐘁𐘂"),
-					new T("𐘀𐘁", "𐘀𐘁") };
-		}
-	}
+                    new T("123456789", "#1", "12", "23", "34", "45", "56",
+                            "67", "78", "89", "9#"),
+                    new T("123456789123456789", "#1", "12", "23", "34", "45",
+                            "56", "67", "78", "89", "91", "12", "23", "34",
+                            "45", "56", "67", "78", "89", "9#")
+            };
+        }
+    }
 
-	public static final class QGram2WithFilter extends TokenizerTest {
+    public static final class QGram2 extends TokenizerTest {
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGram(2, true);
-		}
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGram(2);
+        }
 
-		@Override
-		protected T[] getTests() {
+        @Override
+        protected T[] getTests() {
 
-			return new T[] { 
-					new T(""), 
-					new T("1"), 
-					new T("12", "12"),
-					// Linear-A 
-					// tokenizer should filter on code points
-					new T("𐘀𐘂", "𐘀𐘂"), 
-					new T("𐘀") };
-		}
-	}
+            return new T[]{
+                    new T(""),
+                    new T("1", "1"),
+                    new T("12", "12"),
+                    new T("123456789",
+                            // Expected output
+                            "12", "23", "34", "45", "56", "67", "78", "89"),
+                    new T("123456789123456789",
+                            // Expected output
+                            "12", "23", "34", "45", "56", "67", "78", "89",
+                            "91", "12", "23", "34", "45", "56", "67", "78",
+                            "89"),
+                    new T("He" + acute_accent + "llo",
+                            // Diacritics are their own code point
+                            "He", "e" + acute_accent, acute_accent + "l", "ll", "lo"),
+                    // Linear-A
+                    // tokenizer should split on code points
+                    new T(linearAOne + linearATwo + linearAThree, linearAOne + linearATwo, linearATwo + linearAThree),
+                    new T(linearAOne + linearATwo, linearAOne + linearATwo)
+            };
+        }
+    }
 
-	public static final class QGram3WithDefaultPadding extends TokenizerTest {
+    public static final class QGram2WithFilter extends TokenizerTest {
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGramExtended(3);
-		}
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGram(2, true);
+        }
 
-		@Override
-		protected T[] getTests() {
+        @Override
+        protected T[] getTests() {
 
-			return new T[] {
+            return new T[]{
+                    new T(""),
+                    new T("1"),
+                    new T("12", "12"),
+                    // Linear-A
+                    // tokenizer should filter on code points
+                    new T(linearAOne + linearATwo, linearAOne + linearATwo),
+                    new T(linearAOne)
+            };
+        }
+    }
 
-					new T(""),
-					new T("1", "##1", "#1#", "1##"),
-					new T("12", "##1", "#12", "12#", "2##"),
-					new T("123", "##1", "#12", "123", "23#", "3##"),
+    public static final class QGram3WithDefaultPadding extends TokenizerTest {
 
-					new T("12345678", "##1", "#12", "123", "234", "345", "456",
-							"567", "678", "78#", "8##"),
-					new T("123123", "##1", "#12", "123", "231", "312", "123",
-							"23#", "3##"),
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGramExtended(3);
+        }
 
-			};
-		}
-	}
+        @Override
+        protected T[] getTests() {
 
-	public static final class QGram3 extends TokenizerTest {
+            return new T[]{
 
-		@Override
-		protected Tokenizer getTokenizer() {
-			return new Tokenizers.QGram(3);
-		}
+                    new T(""),
+                    new T("1", "##1", "#1#", "1##"),
+                    new T("12", "##1", "#12", "12#", "2##"),
+                    new T("123", "##1", "#12", "123", "23#", "3##"),
 
-		@Override
-		protected T[] getTests() {
+                    new T("12345678", "##1", "#12", "123", "234", "345", "456",
+                            "567", "678", "78#", "8##"),
+                    new T("123123", "##1", "#12", "123", "231", "312", "123",
+                            "23#", "3##"),
 
-			return new T[] {
-					new T(""),
-					new T("1", "1"),
-					new T("12", "12"),
-					new T("123", "123"),
-					new T("12345678", "123", "234", "345", "456", "567", "678"),
-					new T("123123", "123", "231", "312", "123"),
-					new T("Héllo",
-					// Diacritics are their own code point
-							"Hé", "él", "́ll", "llo"),
-					// Linear-A surrogate pairs, pairs should be kept together
-					new T("𐘀𐘁𐘂", "𐘀𐘁𐘂")
+            };
+        }
+    }
 
-			};
-		}
-	}
+    public static final class QGram3 extends TokenizerTest {
+
+        @Override
+        protected Tokenizer getTokenizer() {
+            return new Tokenizers.QGram(3);
+        }
+
+        @Override
+        protected T[] getTests() {
+
+
+            return new T[]{
+                    new T(""),
+                    new T("1", "1"),
+                    new T("12", "12"),
+                    new T("123", "123"),
+                    new T("12345678", "123", "234", "345", "456", "567", "678"),
+                    new T("123123", "123", "231", "312", "123"),
+                    new T("He" + acute_accent + "llo",
+                            // Diacritics are their own code point
+                            "He" + acute_accent, "e" + acute_accent + "l", acute_accent + "ll", "llo"),
+                    // Linear-A surrogate pairs, pairs should be kept together
+                    new T(linearAOne + linearATwo + linearAThree, linearAOne + linearATwo + linearAThree)
+            };
+        }
+    }
 }
