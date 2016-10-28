@@ -25,6 +25,7 @@ import static java.lang.Math.max;
 import static org.simmetrics.metrics.Math.max;
 import static org.simmetrics.metrics.Math.min;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.simmetrics.CodePointDistance;
@@ -42,19 +43,146 @@ import org.simmetrics.StringMetric;
  * not satisfy the coincidence property.
  * <p>
  * This class is immutable and thread-safe.
- * 
+ *
  * @see <a href=
- *      "https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Wikipedia
- *      - Damerau-Levenshtein distance</a>
+ * "https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Wikipedia
+ * - Damerau-Levenshtein distance</a>
  * @see Levenshtein
- * 
  */
 public final class DamerauLevenshtein implements StringMetric, StringDistance {
+
+	private final ForStrings impl;
+
+	/**
+	 * Constructs a new Damerau-Levenshtein distance and similarity measure
+	 * between strings.
+	 *
+	 * @deprecated use {@link DamerauLevenshtein#forStrings()}
+	 */
+	@Deprecated
+	public DamerauLevenshtein() {
+		this(1.0f, 1.0f, 1.0f);
+	}
+
+	/**
+	 * Constructs a new weighted Damerau-Levenshtein distance and similarity
+	 * measure between strings. When the cost for substitution and/or
+	 * transposition are zero Damerau-Levenshtein does not satisfy the
+	 * coincidence property.
+	 *
+	 * @param insertDelete positive non-zero cost of an insert or deletion operation
+	 * @param substitute   positive cost of a substitute operation
+	 * @param transpose    positive cost of a transpose operation
+	 * @deprecated use
+	 * {@link DamerauLevenshtein#forStrings(float, float, float)}
+	 */
+	@Deprecated
+	public DamerauLevenshtein(float insertDelete, float substitute,
+	                          float transpose) {
+		impl = new ForStrings(insertDelete, substitute, transpose);
+	}
+
+	/**
+	 * Returns a Damerau-Levenshtein distance and similarity measure between
+	 * Unicode code point arrays.
+	 *
+	 * @return a Damerau-Levenshtein metric
+	 */
+	public static ForCodePoints forCodePoints() {
+		return forCodePoints(1.0f, 1.0f, 1.0f);
+	}
+
+	/**
+	 * Returns a weighted Damerau-Levenshtein distance and similarity measure
+	 * between Unicode code point arrays. When the cost for substitution and/or
+	 * transposition are zero Damerau-Levenshtein does not satisfy the
+	 * coincidence property.
+	 *
+	 * @param insertDelete positive non-zero cost of an insert or deletion operation
+	 * @param substitute   positive cost of a substitute operation
+	 * @param transpose    positive cost of a transpose operation
+	 * @return weighted Damerau-Levenshtein metric
+	 */
+	public static ForCodePoints forCodePoints(float insertDelete,
+	                                          float substitute, float transpose) {
+		return new ForCodePoints(insertDelete, substitute, transpose);
+	}
+
+	/**
+	 * Returns a Damerau-Levenshtein distance and similarity measure between
+	 * lists.
+	 *
+	 * @return a Damerau-Levenshtein metric
+	 */
+	public static <T> ForLists<T> forLists() {
+		return forLists(1.0f, 1.0f, 1.0f);
+	}
+
+	/**
+	 * Returns a weighted Damerau-Levenshtein distance and similarity measure
+	 * between lists. When the cost for substitution and/or transposition are
+	 * zero Damerau-Levenshtein does not satisfy the coincidence property.
+	 *
+	 * @param insertDelete positive non-zero cost of an insert or deletion operation
+	 * @param substitute   positive cost of a substitute operation
+	 * @param transpose    positive cost of a transpose operation
+	 * @return weighted Damerau-Levenshtein metric
+	 */
+	public static <T> ForLists<T> forLists(float insertDelete, float substitute,
+	                                       float transpose) {
+		return new ForLists<>(insertDelete, substitute, transpose);
+	}
+
+	/**
+	 * Returns a Damerau-Levenshtein distance and similarity measure between
+	 * strings.
+	 * <p>
+	 * Strings are compared using character values. To correctly compare strings
+	 * containing surrogate pairs use {@link DamerauLevenshtein#forCodePoints()}
+	 *
+	 * @return a Damerau-Levenshtein metric
+	 */
+	public static ForStrings forStrings() {
+		return forStrings(1.0f, 1.0f, 1.0f);
+	}
+
+	/**
+	 * Returns a weighted Damerau-Levenshtein distance and similarity measure
+	 * between strings. When the cost for substitution and/or transposition are
+	 * zero Damerau-Levenshtein does not satisfy the coincidence property.
+	 * <p>
+	 * Strings are compared using character values. To correctly compare strings
+	 * containing surrogate pairs use
+	 * {@link DamerauLevenshtein#forCodePoints(float, float, float)}
+	 *
+	 * @param insertDelete positive non-zero cost of an insert or deletion operation
+	 * @param substitute   positive cost of a substitute operation
+	 * @param transpose    positive cost of a transpose operation
+	 * @return weighted Damerau-Levenshtein metric
+	 */
+	public static ForStrings forStrings(float insertDelete, float substitute,
+	                                    float transpose) {
+		return new ForStrings(insertDelete, substitute, transpose);
+	}
+
+	@Override
+	public float compare(String a, String b) {
+		return impl.compare(a, b);
+	}
+
+	@Override
+	public float distance(String a, String b) {
+		return impl.distance(a, b);
+	}
+
+	@Override
+	public String toString() {
+		return impl.toString();
+	}
 
 	/**
 	 * Calculates the Damerau-Levenshtein similarity and distance measure
 	 * between Unicode code points arrays.
-	 *
 	 */
 	public static final class ForCodePoints extends Impl
 			implements CodePointMetric, CodePointDistance {
@@ -80,10 +208,8 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 	 * <p>
 	 * The elements in the lists have to implement {@link Object#hashCode()} and
 	 * {@link Object#equals(Object)}.
-	 * 
-	 * @param <T>
-	 *            the type of elements contained in the lists
 	 *
+	 * @param <T> the type of elements contained in the lists
 	 */
 	public static final class ForLists<T> extends Impl
 			implements ListMetric<T>, ListDistance<T> {
@@ -127,14 +253,14 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 
 	}
 
-	static class Impl {
+	private static class Impl {
 
 		private final float insertDelete;
 		private final float maxCost;
 		private final float substitute;
 		private final float transpose;
 
-		protected Impl(float insertDelete, float substitute, float transpose) {
+		Impl(float insertDelete, float substitute, float transpose) {
 			checkArgument(insertDelete > 0);
 			checkArgument(substitute >= 0);
 			checkArgument(transpose >= 0);
@@ -145,7 +271,7 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 			this.transpose = transpose;
 		}
 
-		protected float compareCodePoint(final int[] a, final int[] b) {
+		float compareCodePoint(final int[] a, final int[] b) {
 			if (a.length == 0 && b.length == 0) {
 				return 1.0f;
 			}
@@ -154,7 +280,7 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 					/ (maxCost * max(a.length, b.length)));
 		}
 
-		protected <T> float compareLists(final List<T> a, final List<T> b) {
+		<T> float compareLists(final List<T> a, final List<T> b) {
 			if (a.isEmpty() && b.isEmpty()) {
 				return 1.0f;
 			}
@@ -163,7 +289,7 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 					/ (maxCost * max(a.size(), b.size())));
 		}
 
-		protected float compareStrings(final String a, final String b) {
+		float compareStrings(final String a, final String b) {
 			if (a.isEmpty() && b.isEmpty()) {
 				return 1.0f;
 			}
@@ -172,13 +298,13 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 					/ (maxCost * max(a.length(), b.length())));
 		}
 
-		protected float distanceCodePoint(final int[] s, final int[] t) {
+		float distanceCodePoint(final int[] s, final int[] t) {
 
 			if (s.length == 0)
 				return t.length * insertDelete;
 			if (t.length == 0)
 				return s.length * insertDelete;
-			if (s.equals(t))
+			if (Arrays.equals(s, t))
 				return 0;
 
 			final int tLength = t.length;
@@ -226,7 +352,7 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 			return v1[tLength];
 		}
 
-		protected <T> float distanceLists(final List<T> s, final List<T> t) {
+		<T> float distanceLists(final List<T> s, final List<T> t) {
 
 			if (s.isEmpty())
 				return t.size() * insertDelete;
@@ -282,7 +408,7 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 			return v1[tLength];
 		}
 
-		protected float distanceStrings(final String s, final String t) {
+		float distanceStrings(final String s, final String t) {
 
 			if (s.isEmpty())
 				return t.length() * insertDelete;
@@ -344,149 +470,6 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 					+ ", substitute=" + substitute + ", transpose=" + transpose
 					+ "]";
 		}
-	}
-
-	/**
-	 * Returns a Damerau-Levenshtein distance and similarity measure between
-	 * Unicode code point arrays.
-	 * 
-	 * @return a Damerau-Levenshtein metric
-	 */
-	public static ForCodePoints forCodePoints() {
-		return forCodePoints(1.0f, 1.0f, 1.0f);
-	}
-
-	/**
-	 * Returns a weighted Damerau-Levenshtein distance and similarity measure
-	 * between Unicode code point arrays. When the cost for substitution and/or
-	 * transposition are zero Damerau-Levenshtein does not satisfy the
-	 * coincidence property.
-	 * 
-	 * @param insertDelete
-	 *            positive non-zero cost of an insert or deletion operation
-	 * @param substitute
-	 *            positive cost of a substitute operation
-	 * @param transpose
-	 *            positive cost of a transpose operation
-	 * @return weighted Damerau-Levenshtein metric
-	 */
-	public static ForCodePoints forCodePoints(float insertDelete,
-			float substitute, float transpose) {
-		return new ForCodePoints(insertDelete, substitute, transpose);
-	}
-
-	/**
-	 * Returns a Damerau-Levenshtein distance and similarity measure between
-	 * lists.
-	 * 
-	 * @return a Damerau-Levenshtein metric
-	 */
-	public static <T> ForLists<T> forLists() {
-		return forLists(1.0f, 1.0f, 1.0f);
-	}
-
-	/**
-	 * Returns a weighted Damerau-Levenshtein distance and similarity measure
-	 * between lists. When the cost for substitution and/or transposition are
-	 * zero Damerau-Levenshtein does not satisfy the coincidence property.
-	 * 
-	 * @param insertDelete
-	 *            positive non-zero cost of an insert or deletion operation
-	 * @param substitute
-	 *            positive cost of a substitute operation
-	 * @param transpose
-	 *            positive cost of a transpose operation
-	 * @return weighted Damerau-Levenshtein metric
-	 */
-	public static <T> ForLists<T> forLists(float insertDelete, float substitute,
-			float transpose) {
-		return new ForLists<>(insertDelete, substitute, transpose);
-	}
-
-	/**
-	 * Returns a Damerau-Levenshtein distance and similarity measure between
-	 * strings.
-	 * <p>
-	 * Strings are compared using character values. To correctly compare strings
-	 * containing surrogate pairs use {@link DamerauLevenshtein#forCodePoints()}
-	 * 
-	 * @return a Damerau-Levenshtein metric
-	 */
-	public static ForStrings forStrings() {
-		return forStrings(1.0f, 1.0f, 1.0f);
-	}
-
-	/**
-	 * Returns a weighted Damerau-Levenshtein distance and similarity measure
-	 * between strings. When the cost for substitution and/or transposition are
-	 * zero Damerau-Levenshtein does not satisfy the coincidence property.
-	 * <p>
-	 * Strings are compared using character values. To correctly compare strings
-	 * containing surrogate pairs use
-	 * {@link DamerauLevenshtein#forCodePoints(float, float, float)}
-	 * 
-	 * @param insertDelete
-	 *            positive non-zero cost of an insert or deletion operation
-	 * @param substitute
-	 *            positive cost of a substitute operation
-	 * @param transpose
-	 *            positive cost of a transpose operation
-	 * @return weighted Damerau-Levenshtein metric
-	 */
-	public static ForStrings forStrings(float insertDelete, float substitute,
-			float transpose) {
-		return new ForStrings(insertDelete, substitute, transpose);
-	}
-
-	private final ForStrings impl;
-
-	/**
-	 * Constructs a new Damerau-Levenshtein distance and similarity measure
-	 * between strings.
-	 * 
-	 * @deprecated use {@link DamerauLevenshtein#forStrings()}
-	 */
-	@Deprecated
-	public DamerauLevenshtein() {
-		this(1.0f, 1.0f, 1.0f);
-	}
-
-	/**
-	 * Constructs a new weighted Damerau-Levenshtein distance and similarity
-	 * measure between strings. When the cost for substitution and/or
-	 * transposition are zero Damerau-Levenshtein does not satisfy the
-	 * coincidence property.
-	 * 
-	 * @deprecated use
-	 *             {@link DamerauLevenshtein#forStrings(float, float, float)}
-	 * 
-	 * 
-	 * @param insertDelete
-	 *            positive non-zero cost of an insert or deletion operation
-	 * @param substitute
-	 *            positive cost of a substitute operation
-	 * @param transpose
-	 *            positive cost of a transpose operation
-	 */
-	@Deprecated
-	public DamerauLevenshtein(float insertDelete, float substitute,
-			float transpose) {
-		impl = new ForStrings(insertDelete, substitute, transpose);
-	}
-
-	@Override
-	public float compare(String a, String b) {
-		return impl.compare(a, b);
-	}
-
-	@Override
-	public float distance(String a, String b) {
-		return impl.distance(a, b);
-	}
-
-	@Override
-	public String toString() {
-		return impl.toString();
 	}
 
 }
