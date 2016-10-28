@@ -7,5 +7,5 @@
 pom.xml.releaseBackup
 pom.xml.versionBackup
 release.properties
-
-
+/.idea/
+*.iml
