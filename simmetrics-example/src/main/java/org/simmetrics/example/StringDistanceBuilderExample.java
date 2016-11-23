@@ -121,7 +121,7 @@ public final class StringDistanceBuilderExample {
 	 * 
 	 * By splitting on whitespace is tokenized into:
 	 * 
-	 * `[chilperic, ii, son, of, childeric, ii]`
+	 * `[chilperic,ii,son,of,childeric,ii]`
 	 * 
 	 * The choice of the tokenizer can influence the effectiveness of a metric.
 	 * For example when comparing individual words a q-gram tokenizer will be
@@ -148,18 +148,17 @@ public final class StringDistanceBuilderExample {
 
 	/**
 	 * Tokenizers can also be chained.
-	 * 
+	 *
 	 * `chilperic ii son of childeric ii`
-	 * 
+	 *
 	 * By splitting on whitespace is tokenized into:
-	 * 
-	 * `[chilperic, ii, son, of, childeric, ii]`
-	 * 
-	 * After using a q-gram with a q of 2:
-	 * 
-	 * `[ch,hi,il,il,lp,pe,er,ri,ic, ii, so,on, of, ch,hi,il,ld,de,er,ri,ic,
-	 * ii]`
-	 * 
+	 *
+	 * `[chilperic,ii,son,of,childeric,ii]`
+	 *
+	 * Then after using a q-gram with a q of 2:
+	 *
+	 * `[ch,hi,il,il,lp,pe,er,ri,ic,ii,so,on,of,ch,hi,il,ld,de,er,ri,ic,ii]`
+	 *
 	 */
 	public static float example04() {
 
