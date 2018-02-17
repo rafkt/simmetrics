@@ -23,6 +23,7 @@ package org.simmetrics.metrics;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.commonPrefix;
 import static java.lang.Math.min;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import org.simmetrics.StringDistance;
 import org.simmetrics.StringMetric;
@@ -76,8 +77,7 @@ public final class JaroWinkler implements StringMetric, StringDistance {
 	 * @return a new JaroWinkler metric
 	 */
 	public static JaroWinkler createWithBoostThreshold() {
-		return new JaroWinkler(WINKLER_BOOST_THRESHOLD, PREFIX_SCALE,
-				MAX_PREFIX_LENGTH);
+		return new JaroWinkler(WINKLER_BOOST_THRESHOLD, PREFIX_SCALE, MAX_PREFIX_LENGTH);
 	}
 
 	/**
@@ -92,8 +92,7 @@ public final class JaroWinkler implements StringMetric, StringDistance {
 	 *            cutoff at which a longer common prefix does not improve the
 	 *            score
 	 */
-	public JaroWinkler(float boostThreshold, float prefixScale,
-			int maxPrefixLength) {
+	public JaroWinkler(float boostThreshold, float prefixScale, int maxPrefixLength) {
 		checkArgument(boostThreshold >= 0);
 		checkArgument(0 <= prefixScale && prefixScale <= 1);
 		checkArgument(maxPrefixLength >= 0);
@@ -116,7 +115,7 @@ public final class JaroWinkler implements StringMetric, StringDistance {
 			return jaroScore;
 		}
 
-		int prefixLength = min(commonPrefix(a, b).length(), maxPrefixLength);
+		int prefixLength = min(codePointLength(commonPrefix(a, b)), maxPrefixLength);
 
 		return jaroScore + (prefixLength * prefixScale * (1.0f - jaroScore));
 	}

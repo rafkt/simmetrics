@@ -18,34 +18,48 @@
  * #L%
  */
 package org.simmetrics.example;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 @SuppressWarnings("javadoc")
 public class ReadMeExampleTest {
-	
+
 	private static final float DELTA = 0.0001f;
-	
+
 	@Test
-	public void example01(){
+	public void example01() {
 		assertEquals(0.4767f, ReadMeExample.example01(), DELTA);
 	}
-	
+
 	@Test
-	public void example02(){
+	public void example02() {
 		assertEquals(0.5720f, ReadMeExample.example02(), DELTA);
 	}
-	
+
 	@Test
-	public void example03(){
+	public void example03() {
 		assertEquals(3.0000f, ReadMeExample.example03(), DELTA);
 	}
 
 	@Test
-	public void example04(){
+	public void example04() {
 		assertEquals(0.4285f, ReadMeExample.example04(), DELTA);
+	}
+
+	@Test
+	public void example05() {
+		assertEquals(
+				asList("𐇑", "𐇛", "𐇜", "𐇐", "𐇡"),
+				ReadMeExample.example05()
+		);
 	}
 
 }

@@ -21,7 +21,9 @@ package org.simmetrics.example;
 
 import static java.util.Arrays.asList;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -35,6 +37,7 @@ import org.simmetrics.metrics.EuclideanDistance;
 import org.simmetrics.metrics.OverlapCoefficient;
 import org.simmetrics.metrics.StringMetrics;
 import org.simmetrics.simplifiers.Simplifiers;
+import org.simmetrics.tokenizers.Tokenizer;
 import org.simmetrics.tokenizers.Tokenizers;
 
 /**
@@ -94,6 +97,24 @@ public final class ReadMeExample {
 		SetMetric<Integer> metric = new OverlapCoefficient<>();
 
 		float result = metric.compare(scores1, scores2); // 0.4285
+
+		return result;
+	}
+
+
+	public static List<String> example05() {
+		String str1 = "𐇑𐇛𐇜𐇐𐇡";
+
+		Tokenizer tokenizer = input -> {
+			List<String> tokens = new ArrayList<>();
+			for (int start = 0; start < input.length(); start = input.offsetByCodePoints(start, 1)){
+				int end = input.offsetByCodePoints(start, 1);
+				tokens.add(input.substring(start, end));
+			}
+			return tokens;
+		};
+
+		List<String> result = tokenizer.tokenizeToList(str1);  // [ 𐇑, 𐇛, 𐇜, 𐇐, 𐇡 ]
 
 		return result;
 	}

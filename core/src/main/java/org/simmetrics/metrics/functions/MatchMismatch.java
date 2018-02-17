@@ -56,8 +56,7 @@ public class MatchMismatch implements Substitution {
 
 	@Override
 	public float compare(String a, int aIndex, String b, int bIndex) {
-		return a.charAt(aIndex) == b.charAt(bIndex) ? matchValue
-				: mismatchValue;
+		return a.codePointAt(aIndex) == b.codePointAt(bIndex) ? matchValue : mismatchValue;
 	}
 
 	@Override

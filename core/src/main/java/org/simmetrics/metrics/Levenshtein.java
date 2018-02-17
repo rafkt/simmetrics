@@ -23,6 +23,7 @@ package org.simmetrics.metrics;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.max;
 import static org.simmetrics.metrics.Math.min;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import org.simmetrics.StringDistance;
 import org.simmetrics.StringMetric;
@@ -77,21 +78,21 @@ public final class Levenshtein implements StringMetric, StringDistance {
 			return 1.0f;
 		}
 
-		return 1.0f - (distance(a, b) / (maxCost * max(a.length(), b.length())));
+		return 1.0f - (distance(a, b) / (maxCost * max(codePointLength(a), codePointLength(b))));
 	}
 
 	@Override
 	public float distance(final String s, final String t) {
 
 		if (s.isEmpty())
-			return t.length();
+			return codePointLength(t);
 		if (t.isEmpty())
-			return s.length();
+			return codePointLength(s);
 		if (s.equals(t))
 			return 0;
 
-		final int tLength = t.length();
-		final int sLength = s.length();
+		final int tLength = codePointLength(t);
+		final int sLength = codePointLength(s);
 
 		float[] swap;
 		float[] v0 = new float[tLength + 1];
@@ -111,11 +112,10 @@ public final class Levenshtein implements StringMetric, StringDistance {
 			v1[0] = (i + 1) * insertDelete;
 
 			for (int j = 0; j < tLength; j++) {
-				v1[j + 1] = min(v1[j] + insertDelete,
+				v1[j + 1] = min(
+						v1[j] + insertDelete,
 						v0[j + 1] + insertDelete,
-						v0[j]
-								+ (s.charAt(i) == t.charAt(j) ? 0.0f
-										: substitute));
+						v0[j] + (s.codePointAt(i) == t.codePointAt(j) ? 0.0f : substitute));
 			}
 
 			swap = v0;

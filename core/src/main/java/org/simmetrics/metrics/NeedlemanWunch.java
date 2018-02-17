@@ -25,6 +25,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 import static org.simmetrics.metrics.Math.min;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import java.util.Objects;
 
@@ -85,13 +86,13 @@ public final class NeedlemanWunch implements StringMetric {
 			return 1.0f;
 		}
 
-		float maxDistance = max(a.length(), b.length())
-				* max(substitution.max(), gapValue);
-		float minDistance = max(a.length(), b.length())
-				* min(substitution.min(), gapValue);
+		int aLength = codePointLength(a);
+		int bLength = codePointLength(b);
 
-		return (-needlemanWunch(a, b) - minDistance)
-				/ (maxDistance - minDistance);
+		float maxDistance = max(aLength, bLength) * max(substitution.max(), gapValue);
+		float minDistance = max(aLength, bLength) * min(substitution.min(), gapValue);
+
+		return (-needlemanWunch(a, b) - minDistance) / (maxDistance - minDistance);
 
 	}
 
@@ -102,14 +103,14 @@ public final class NeedlemanWunch implements StringMetric {
 		}
 
 		if (s.isEmpty()) {
-			return -gapValue * t.length();
+			return -gapValue * codePointLength(t);
 		}
 		if (t.isEmpty()) {
-			return -gapValue * s.length();
+			return -gapValue * codePointLength(s);
 		}
 		
-		final int n = s.length();
-		final int m = t.length();
+		final int n = codePointLength(s);
+		final int m = codePointLength(t);
 
 		// We're only interested in the alignment penalty between s and t
 		// and not their actual alignment. This means we don't have to backtrack

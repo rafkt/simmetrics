@@ -22,6 +22,7 @@
 package org.simmetrics.metrics;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import java.util.Iterator;
 import java.util.List;
@@ -137,21 +138,22 @@ public final class HammingDistance {
 		 */
 		@Override
 		public float distance(String a, String b) {
-			checkArgument(a.length() == b.length());
+			int length = codePointLength(a);
+			checkArgument( length == codePointLength(b));
 
 			if (a.isEmpty()) {
 				return 0;
 			}
 
 			int distance = 0;
-			for (int i = 0, length =  a.length(); i < length; i++) {
-				if (a.charAt(i) != b.charAt(i)) {
+			for (int i = 0; i < length; i++) {
+				if (a.codePointAt(i) != b.codePointAt(i)) {
 					distance++;
 				}
 			}
 			return distance;
 		}
-		
+
 		@Override
 		public String toString() {
 			return "HammingStringDistance";

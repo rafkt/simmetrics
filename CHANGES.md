@@ -1,8 +1,19 @@
 Change Log
 ==========
 
-## Since 5.0.0 ##
+## Since 5.0.0-SNAPSHOT ##
  - Compiled as Java 8
+ - Compare strings by unicode code points rather then `char` values. This affects:
+     - DamerauLevenshtein
+     - HammingDistance
+     - Jaro
+     - JaroWinkler
+     - Levenshtein
+     - LongestCommonSubSequence
+     - LongestCommonSubstring
+     - NeedlemanWunch
+     - SmithWaterman
+     - SmithWatermanGotoh  
  - Replaced Guava functions and predicates with Java 8 equivalents
  - Removed deprecated `StringMetrics.create` methods. Use the `StringMetricBuilder` instead.
  - Simplifiers based on the Apache Commons Codec have been moved to `simmetrics-commons-codec-simplifiers`. These 

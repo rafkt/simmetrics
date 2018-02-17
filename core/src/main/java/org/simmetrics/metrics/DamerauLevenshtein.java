@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.max;
 import static org.simmetrics.metrics.Math.max;
 import static org.simmetrics.metrics.Math.min;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import org.simmetrics.StringDistance;
 import org.simmetrics.StringMetric;
@@ -37,12 +38,11 @@ import org.simmetrics.StringMetric;
  * not satisfy the coincidence property.
  * <p>
  * This class is immutable and thread-safe.
- * 
+ *
  * @see <a
- *      href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Wikipedia
- *      - Damerau-Levenshtein distance</a>
+ * href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Wikipedia
+ * - Damerau-Levenshtein distance</a>
  * @see Levenshtein
- * 
  */
 public final class DamerauLevenshtein implements StringMetric, StringDistance {
 
@@ -62,16 +62,12 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 	 * Constructs a new weighted Damerau-Levenshtein metric. When the cost for
 	 * substitution and/or transposition are zero Damerau-Levenshtein does not
 	 * satisfy the coincidence property.
-	 * 
-	 * @param insertDelete
-	 *            positive non-zero cost of an insert or deletion operation
-	 * @param substitute
-	 *            positive cost of a substitute operation
-	 * @param transpose
-	 *            positive cost of a transpose operation
+	 *
+	 * @param insertDelete positive non-zero cost of an insert or deletion operation
+	 * @param substitute   positive cost of a substitute operation
+	 * @param transpose    positive cost of a transpose operation
 	 */
-	public DamerauLevenshtein(float insertDelete, float substitute,
-			float transpose) {
+	public DamerauLevenshtein(float insertDelete, float substitute, float transpose) {
 		checkArgument(insertDelete > 0);
 		checkArgument(substitute >= 0);
 		checkArgument(transpose >= 0);
@@ -83,26 +79,26 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 	}
 
 	@Override
-	public float compare(final String a, final String b) {	
+	public float compare(final String a, final String b) {
 		if (a.isEmpty() && b.isEmpty()) {
 			return 1.0f;
 		}
 
-		return 1.0f - (distance(a, b) / (maxCost * max(a.length(), b.length())));
+		return 1.0f - (distance(a, b) / (maxCost * max(codePointLength(a), codePointLength(b))));
 	}
 
 	@Override
 	public float distance(final String s, final String t) {
 
 		if (s.isEmpty())
-			return t.length() * insertDelete;
+			return codePointLength(t) * insertDelete;
 		if (t.isEmpty())
-			return s.length() * insertDelete;
+			return codePointLength(s) * insertDelete;
 		if (s.equals(t))
 			return 0;
 
-		final int tLength = t.length();
-		final int sLength = s.length();
+		final int tLength = codePointLength(t);
+		final int sLength = codePointLength(s);
 
 		float[] swap;
 		float[] v0 = new float[tLength + 1];
@@ -123,16 +119,23 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 			v2[0] = (i + 1) * insertDelete;
 
 			for (int j = 0; j < tLength; j++) {
-				if (j > 0 && i > 0 && s.charAt(i - 1) == t.charAt(j)
-						&& s.charAt(i) == t.charAt(j - 1)) {
-					v2[j + 1] = min(v2[j] + insertDelete, v1[j + 1]
-							+ insertDelete, v1[j]
-							+ (s.charAt(i) == t.charAt(j) ? 0.0f : substitute),
-							v0[j - 1] + transpose);
+				final boolean match =
+						j > 0 && i > 0
+								&& s.codePointAt(i - 1) == t.codePointAt(j)
+								&& s.codePointAt(i) == t.codePointAt(j - 1);
+				if (match) {
+					v2[j + 1] = min(
+							v2[j] + insertDelete,
+							v1[j + 1] + insertDelete,
+							v1[j] + (s.codePointAt(i) == t.codePointAt(j) ? 0.0f : substitute),
+							v0[j - 1] + transpose
+					);
 				} else {
-					v2[j + 1] = min(v2[j] + insertDelete, v1[j + 1]
-							+ insertDelete, v1[j]
-							+ (s.charAt(i) == t.charAt(j) ? 0.0f : substitute));
+					v2[j + 1] = min(
+							v2[j] + insertDelete,
+							v1[j + 1] + insertDelete,
+							v1[j] + (s.codePointAt(i) == t.codePointAt(j) ? 0.0f : substitute)
+					);
 				}
 			}
 
@@ -153,5 +156,4 @@ public final class DamerauLevenshtein implements StringMetric, StringDistance {
 				+ "]";
 	}
 
-	
 }

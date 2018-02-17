@@ -20,6 +20,8 @@
 package org.simmetrics.metrics;
 
 import static java.lang.Math.max;
+import static org.simmetrics.metrics.Unicode.codePointLength;
+
 import org.simmetrics.StringDistance;
 import org.simmetrics.StringMetric;
 
@@ -30,11 +32,11 @@ import org.simmetrics.StringMetric;
  * <code>
  * similarity(a,b) = ∣lcs(a,b)∣ / max{∣a∣, ∣b∣}
  * <br>
- * distance(a,b) = ∣a∣ + ∣b∣ - 2 * ∣lcs(a,b)∣  
+ * distance(a,b) = ∣a∣ + ∣b∣ - 2 * ∣lcs(a,b)∣
  * </code>
  * <p>
  * This class is immutable and thread-safe.
- * 
+ *
  * @see <a
  *      href="https://en.wikipedia.org/wiki/Longest_common_subsequence_problem">Wikipedia
  *      - Longest common subsequence problem</a>
@@ -53,7 +55,7 @@ public final class LongestCommonSubSequence implements StringMetric,
 			return 0.0f;
 		}
 
-		return lcs(a, b) / (float)max(a.length() ,b.length());
+		return lcs(a, b) / (float)max(codePointLength(a), codePointLength(b));
 	}
 
 	@Override
@@ -63,18 +65,18 @@ public final class LongestCommonSubSequence implements StringMetric,
 			return 0.0f;
 		}
 		if (a.isEmpty()) {
-			return b.length();
+			return codePointLength(b);
 		}
 		if (b.isEmpty()) {
-			return a.length();
+			return codePointLength(a);
 		}
-		return a.length() + b.length() - 2 * lcs(a, b);
+		return codePointLength(a) + codePointLength(b) - 2 * lcs(a, b);
 	}
 
 	private static int lcs(String a, String b) {
 
-		final int n = a.length();
-		final int m = b.length();
+		final int n = codePointLength(a);
+		final int m = codePointLength(b);
 
 		// We're only interested in the actual longest common subsequence This
 		// means we don't have to backtrack through the n-by-m matrix and can
@@ -84,13 +86,13 @@ public final class LongestCommonSubSequence implements StringMetric,
 
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= m; j++) {
-				if (a.charAt(i - 1) == b.charAt(j - 1)) {
+				if (a.codePointAt(i - 1) == b.codePointAt(j - 1)) {
 					v1[j] = v0[j - 1] + 1;
 				} else {
 					v1[j] = max(v1[j - 1], v0[j]);
 				}
 			}
-			int[] swap = v0; v0 = v1; v1 = swap; 
+			int[] swap = v0; v0 = v1; v1 = swap;
 		}
 
 		// Because we swapped the results are in v0.

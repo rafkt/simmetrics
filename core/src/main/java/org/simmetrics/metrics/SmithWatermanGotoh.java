@@ -26,6 +26,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 import static org.simmetrics.metrics.Math.max;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.functions.MatchMismatch;
@@ -91,15 +92,14 @@ public final class SmithWatermanGotoh implements StringMetric {
 			return 0.0f;
 		}
 
-		float maxDistance = min(a.length(), b.length())
-				* max(substitution.max(), gapValue);
+		float maxDistance = min(codePointLength(a), codePointLength(b)) * max(substitution.max(), gapValue);
 		return smithWatermanGotoh(a, b) / maxDistance;
 	}
 
 	private float smithWatermanGotoh(final String s, final String t) {
 		
-		float[] v0 = new float[t.length()];
-		float[] v1 = new float[t.length()];
+		float[] v0 = new float[codePointLength(t)];
+		float[] v1 = new float[v0.length];
 
 		float max = v0[0] = max(0, gapValue, substitution.compare(s, 0, t, 0));
 
@@ -111,7 +111,7 @@ public final class SmithWatermanGotoh implements StringMetric {
 		}
 
 		// Find max
-		for (int i = 1; i < s.length(); i++) {
+		for (int i = 1, length = codePointLength(s) ; i < length; i++) {
 			v1[0] = max(0, v0[0] + gapValue, substitution.compare(s, i, t, 0));
 
 			max = max(max, v1[0]);

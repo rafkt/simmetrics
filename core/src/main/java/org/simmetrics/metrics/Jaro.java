@@ -63,13 +63,14 @@ public final class Jaro implements StringMetric, StringDistance {
 			return 0.0f;
 		}
 
-		// Intentional integer division to round down.
-		final int halfLength = max(0, max(a.length(), b.length()) / 2 - 1);
+		final int[] charsA = a.codePoints().toArray();
+		final int[] charsB = b.codePoints().toArray();
 
-		final char[] charsA = a.toCharArray();
-		final char[] charsB = b.toCharArray();
-		final int[] commonA = getCommonCharacters(charsA, charsB, halfLength);
-		final int[] commonB = getCommonCharacters(charsB, charsA, halfLength);
+		// Intentional integer division to round down.
+		final int halfLength = max(0, max(charsA.length, charsB.length) / 2 - 1);
+
+		final int[] commonA = getCommonCodePoints(charsA, charsB, halfLength);
+		final int[] commonB = getCommonCodePoints(charsB, charsA, halfLength);
 
 		// commonA and commonB will always contain the same multi-set of
 		// characters. Because getCommonCharacters has been optimized, commonA
@@ -88,21 +89,19 @@ public final class Jaro implements StringMetric, StringDistance {
 			return 0.0f;
 		}
 
-		float aCommonRatio = commonCharacters / (float) a.length();
-		float bCommonRatio = commonCharacters / (float) b.length();
-		float transpositionRatio = (commonCharacters - transpositions / 2.0f)
-				/ commonCharacters;
+		float aCommonRatio = commonCharacters / (float) charsA.length;
+		float bCommonRatio = commonCharacters / (float) charsB.length;
+		float transpositionRatio = (commonCharacters - transpositions / 2.0f) / commonCharacters;
 
 		return (aCommonRatio + bCommonRatio + transpositionRatio) / 3.0f;
 	}
 
 	/*
-	 * Returns an array of characters from a within b. A character in b is
+	 * Returns an array of code points from a within b. A character in b is
 	 * counted as common when it is within separation distance from the position
 	 * in a.
 	 */
-	private static int[] getCommonCharacters(final char[] charsA,
-			final char[] charsB, final int separation) {
+	private static int[] getCommonCodePoints(final int[] charsA, final int[] charsB, final int separation) {
 		final int[] common = new int[min(charsA.length, charsB.length)];
 		final boolean[] matched = new boolean[charsB.length];
 
@@ -111,7 +110,7 @@ public final class Jaro implements StringMetric, StringDistance {
 		// duplicate matchings.
 		int commonIndex = 0;
 		for (int i = 0, length = charsA.length; i < length; i++) {
-			final char character = charsA[i];
+			final int character = charsA[i];
 			final int index = indexOf(character, charsB, i - separation, i
 					+ separation + 1, matched);
 			if (index > -1) {
@@ -130,12 +129,11 @@ public final class Jaro implements StringMetric, StringDistance {
 	}
 
 	/*
-	 * Search for character in buffer starting at fromIndex to toIndex - 1.
+	 * Search for code point in buffer starting at fromIndex to toIndex - 1.
 	 * 
 	 * Returns -1 when not found.
 	 */
-	private static int indexOf(char character, char[] buffer, int fromIndex,
-			int toIndex, boolean[] matched) {
+	private static int indexOf(int character, int[] buffer, int fromIndex, int toIndex, boolean[] matched) {
 
 		// compare char with range of characters to either side
 		for (int j = max(0, fromIndex), length = min(toIndex, buffer.length); j < length; j++) {

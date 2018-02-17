@@ -25,6 +25,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 import static org.simmetrics.metrics.Math.max;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.functions.AffineGap;
@@ -90,15 +91,14 @@ public final class SmithWaterman implements StringMetric {
 		if (a.isEmpty() || b.isEmpty()) {
 			return 0.0f;
 		}
-		float maxDistance = min(a.length(), b.length())
-				* max(substitution.max(), gap.min());
+		float maxDistance = min(codePointLength(a), codePointLength(b)) * max(substitution.max(), gap.min());
 		return smithWaterman(a, b) / maxDistance;
 
 	}
 
 	private float smithWaterman(String a, String b) {
-		final int n = a.length();
-		final int m = b.length();
+		final int n = codePointLength(a);
+		final int m = codePointLength(b);
 
 		final float[][] d = new float[n][m];
 

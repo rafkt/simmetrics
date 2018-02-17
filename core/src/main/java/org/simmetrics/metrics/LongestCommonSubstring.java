@@ -20,6 +20,7 @@
 package org.simmetrics.metrics;
 
 import static java.lang.Math.max;
+import static org.simmetrics.metrics.Unicode.codePointLength;
 
 import org.simmetrics.StringDistance;
 import org.simmetrics.StringMetric;
@@ -54,7 +55,7 @@ public final class LongestCommonSubstring implements StringMetric,
 			return 0.0f;
 		}
 
-		return lcs(a, b) / (float) max(a.length(), b.length());
+		return lcs(a, b) / (float) max(codePointLength(a), codePointLength(b));
 	}
 
 	@Override
@@ -64,18 +65,18 @@ public final class LongestCommonSubstring implements StringMetric,
 			return 0.0f;
 		}
 		if (a.isEmpty()) {
-			return b.length();
+			return codePointLength(b);
 		}
 		if (b.isEmpty()) {
-			return a.length();
+			return codePointLength(a);
 		}
-		return a.length() + b.length() - 2 * lcs(a, b);
+		return codePointLength(a) + codePointLength(b) - 2 * lcs(a, b);
 	}
 
 	private static int lcs(String a, String b) {
 
-		final int m = a.length();
-		final int n = b.length();
+		final int m = codePointLength(a);
+		final int n = codePointLength(b);
 
 		int[] v0 = new int[n];
 		int[] v1 = new int[n];
@@ -83,7 +84,7 @@ public final class LongestCommonSubstring implements StringMetric,
 		int z = 0;
 		for (int i = 0; i < m; i++) {
 			for (int j = 0; j < n; j++) {
-				if (a.charAt(i) == b.charAt(j)) {
+				if (a.codePointAt(i) == b.codePointAt(j)) {
 					if (i == 0 || j == 0) {
 						v1[j] = 1;
 					} else {

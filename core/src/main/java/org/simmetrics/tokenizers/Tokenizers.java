@@ -702,10 +702,8 @@ public final class Tokenizers {
 			// sliding windows across the string. So the final index of the left
 			// side of the window lies q code points to the left of end of the
 			// string
-			final int lastQGramStart;
-			try {
-				lastQGramStart = input.offsetByCodePoints(input.length(), -q);
-			} catch (IndexOutOfBoundsException e) {
+			int codePointLength = input.codePointCount(0, input.length());
+			if (codePointLength < q) {
 				// When the window doesn't fit act according to the filter
 				// setting.
 				if (filter) {
@@ -714,6 +712,7 @@ public final class Tokenizers {
 				return singletonList(input);
 			}
 
+			final int lastQGramStart = input.offsetByCodePoints(0, codePointLength - q);
 			final List<String> ret = new ArrayList<>(input.length());
 			for (int qGramStart = 0;
 			     qGramStart <= lastQGramStart;
