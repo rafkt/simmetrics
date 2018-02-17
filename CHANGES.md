@@ -1,12 +1,33 @@
 Change Log
 ==========
 
+## Since 5.0.0 ##
+ - Compiled as Java 8
+ - Replaced Guava functions and predicates with Java 8 equivalents
+ - Removed deprecated `StringMetrics.create` methods. Use the `StringMetricBuilder` instead.
+ - Simplifiers based on the Apache Commons Codec have been moved to `simmetrics-commons-codec-simplifiers`. These 
+ include:
+    - Caverphone1
+    - Caverphone2
+    - ColognePhonetic
+    - DaitchMokotoffSoundex
+    - DoubleMetaphone
+    - MatchRatingApproach
+    - Metaphone
+    - Nysiis
+    - RefinedSoundex
+    - Soundex
+
 ## Since 4.1.1 ##
- - Fixed bug where the QGram tokenizer would split surrogate pairs. The tokenizer will now split a string on code point boundaries rather then characters.
- - Added a normalizing simplifier that normalizes a string into a composed or decomposed form. See: [java.text.Normalizer](http://docs.oracle.com/javase/7/docs/api/java/text/Normalizer.html).
+ - Fixed bug where the QGram tokenizer would split surrogate pairs. The tokenizer will now split a string on code point
+ boundaries rather then characters.
+ - Added a normalizing simplifier that normalizes a string into a composed or decomposed form. See: 
+ [java.text.Normalizer](http://docs.oracle.com/javase/7/docs/api/java/text/Normalizer.html).
 
 ## Since 4.1.0 ##
- - Deprecated Soundex and friends. The inclusion of Soundex and friends lacks a strong enough general usecase to justify the dependency on apache-encoders. Users of this functionality can trivially implement it by wrapping the specific encoder themselves.
+ - Deprecated Soundex and friends. The inclusion of Soundex and friends lacks a strong enough general usecase to justify
+ the dependency on apache-encoders. Users of this functionality can trivially implement it by wrapping the specific
+ encoder themselves.
  - Added StringDistanceBuilder
  - Added StringDistances utility class
  - Updated dependency to Guava 19.0
@@ -21,9 +42,13 @@ Change Log
     - Added MultisetMetric and MultisetDistance
 	- Added Tokenizers.tokenizeToMultiset
 	- Added StringMetricBuilder.with(MultisetMetric)
-	- BlockDistance, EuclideanDistance, MatchingCoefficient and SimonWhite implement MultisetMetric and MultisetDistance rather then the list based equivalents
- - Implementation of CosineSimilarity for sets is better described as the Tanimoto coefficient. CosineSimilarity has been changed from SetMetric to MultisetMetric. It will now take token occurrence into account. Added TanimotoCoefficient which calculates the cosine similarity for sets.
- - Renamed MatchingCoefficient to GeneralizedJaccard. Implementation of matching coefficient for lists is more accurately described as generalized version of Jaccard. 
+	- BlockDistance, EuclideanDistance, MatchingCoefficient and SimonWhite implement MultisetMetric and MultisetDistance
+	rather then the list based equivalents
+ - Implementation of CosineSimilarity for sets is better described as the Tanimoto coefficient. CosineSimilarity has
+ been changed from SetMetric to MultisetMetric. It will now take token occurrence into account. Added
+ TanimotoCoefficient which calculates the cosine similarity for sets.
+ - Renamed MatchingCoefficient to GeneralizedJaccard. Implementation of matching coefficient for lists is more
+ accurately described as generalized version of Jaccard. 
  - Added LongestCommonSubstring metric.
  - Added GeneralizedJaccard
  - Added GeneralizedOverlapCoefficient
@@ -37,8 +62,10 @@ Change Log
  - Changed license to Apache License Version 2.0
  - Added the Identity metric
  - Added cacheTokens(Cache) and cacheStrings(Cache) methods to the StringMetricBuilder
- - Deprecated TokenizingTokenizer and SimplifyingSimplifier utilities in favor of cacheTokens(Cache) and cacheStrings(Cache)
- - Deprecated all convenience caching methods in StringMetric builder in favor of cacheTokens(Cache) and cacheStrings(Cache)
+ - Deprecated TokenizingTokenizer and SimplifyingSimplifier utilities in favor of cacheTokens(Cache) and
+ cacheStrings(Cache)
+ - Deprecated all convenience caching methods in StringMetric builder in favor of cacheTokens(Cache) and
+ cacheStrings(Cache)
  - Deprecated Math utility class
 
 ## Since 3.2.2 ##
@@ -48,9 +75,12 @@ Change Log
  - Fixed bug where EuclidianDistance would return incorrect similarity when one argument was empty
  - Fixed bug where Tokenizers.whiteSpace and Whitespace would return leading empty tokens
  - Corrected DamerauLevenshtein.tostring to include all cost parameters
- - Case, NonDiacritics, WordCharacters simplifiers have been depreciated over having unclear names and to avoid leaking implementation details. Equivalent functions have been added to Simplifiers
- - Added Simplifiers.replaceAll and Simplifiers.removeAll. These respectively replace and remove parts of a string based on a regex.
- - QGram, QGramExtended and WhiteSpace have been deprecated due to having ambiguous names and to avoid leaking implementation details. 
+ - Case, NonDiacritics, WordCharacters simplifiers have been depreciated over having unclear names and to avoid leaking
+ implementation details. Equivalent functions have been added to Simplifiers
+ - Added Simplifiers.replaceAll and Simplifiers.removeAll. These respectively replace and remove parts of a string based
+ on a regex.
+ - QGram, QGramExtended and WhiteSpace have been deprecated due to having ambiguous names and to avoid leaking
+ implementation details. 
  - Added Tokenizers.pattern to create a tokenizer that splits a string based on a regex.
  - StringMetrics.compare and StringMetrics.compareArrays have been depreciated for a lack of a clear use case.
 
@@ -89,7 +119,6 @@ Change Log
   - Fixed dependency on snapshot version of core in example module.
 
 ## Since 3.0.0 ##
-
  - Further crud removal
   - Removed Chapman Algorithms
   - Removed Taglink and Taglink Token
@@ -103,13 +132,15 @@ Change Log
     - Added normalization to remove asymmetry
     - Similarity is now calculated as sqrt(monge-elkan(a,b) * monge-elkan(b,a))
   - Changed Matching Coeficient implementation
-    - Original implementation should have been identical to Jaccard but wasn't. Implementation now is Jaccard but for lists rather then sets.
+    - Original implementation should have been identical to Jaccard but wasn't. Implementation now is Jaccard but for
+    lists rather then sets.
   - Refactored Levenstein and NeedlemanWunch
     - Memory reduced from O(n^2) to O(n)
   - Reimplemented SmithWatermanGotoh and SmithWaterman
     - SW implementation was Gotoh's O(n^2) implementation. SWG was regular SW. Implementations have been swapped.
   - Refactored cost functions 
-    - Replaced SubstitutionCostFunction and AffineGapPenalty interfaces with Substitution and Gap interface respectively.
+    - Replaced SubstitutionCostFunction and AffineGapPenalty interfaces with Substitution and Gap interface
+    respectively.
     - Gap penalties and mismatched character both apply a negative value.
  - Reduced  of StringBuilder syntax
  - Added simplifiers from Apache Encoders project	
@@ -125,6 +156,5 @@ Change Log
    - Soundex
 
 ## Since 2.0.0 ##
-
  - General refactoring
  - Added StringMetricBuilder
