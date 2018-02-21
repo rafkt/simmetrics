@@ -1,8 +1,15 @@
 sudo: false
 language: java
+
+cache:
+  directories:
+    - "$HOME/.m2"
+
+before_cache:
+  - rm -rf $HOME/.m2/repository/com/github/mpkorstanje/simmetrics
+
 jdk:
   - oraclejdk8
-  - oraclejdk9
 
 branches:
   only:
@@ -11,8 +18,7 @@ branches:
   - release-*
 
 before_install:
- - mvn clean
+  - mvn clean
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report -P coveralls.io
-
+  - mvn clean jacoco:prepare-agent test jacoco:report coveralls:report
