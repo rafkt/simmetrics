@@ -31,12 +31,12 @@ import org.simmetrics.tokenizers.Tokenizers;
  * The StringMetrics utility class contains a predefined list of well
  * known similarity metrics for strings.
  */
-public final class StringMetricsExample {
+final class StringMetricsExample {
 
 	/**
 	 * Two strings can be compared using a predefined similarity metric.
 	 */
-	public static float example01() {
+	static float example01() {
 
 		String str1 = "This is a sentence. It is made of words";
 		String str2 = "This sentence is similar. It has almost the same words";
@@ -52,7 +52,7 @@ public final class StringMetricsExample {
 	 * 
 	 * Note that most predefined metrics are setup with a whitespace tokenizer.
 	 */
-	public static float example02() {
+	static float example02() {
 
 		String str1 = "A quirky thing it is. This is a sentence.";
 		String str2 = "This sentence is similar. A quirky thing it is.";
@@ -68,7 +68,7 @@ public final class StringMetricsExample {
 	 *
 	 * For more examples see StringMetricBuilderExample.
 	 */
-	public static float example03() {
+	static float example03() {
 
 		String str1 = "A quirky thing it is. This is a sentence.";
 		String str2 = "This sentence is similar. A quirky thing it is.";

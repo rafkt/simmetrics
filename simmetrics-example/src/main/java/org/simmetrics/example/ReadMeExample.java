@@ -43,9 +43,9 @@ import org.simmetrics.tokenizers.Tokenizers;
 /**
  * Examples from README.md
  */
-@SuppressWarnings("javadoc")
-public final class ReadMeExample {
-	public static float example01() {
+final class ReadMeExample {
+
+	static float example01() {
 
 		String str1 = "This is a sentence. It is made of words";
 		String str2 = "This sentence is similar. It has almost the same words";
@@ -57,7 +57,7 @@ public final class ReadMeExample {
 		return result;
 	}
 
-	public static float example02() {
+	static float example02() {
 
 		String str1 = "This is a sentence. It is made of words";
 		String str2 = "This sentence is similar. It has almost the same words";
@@ -73,7 +73,7 @@ public final class ReadMeExample {
 		return result;
 	}
 
-	public static float example03() {
+	static float example03() {
 
 		String str1 = "This is a sentence. It is made of words";
 		String str2 = "This sentence is similar. It has almost the same words";
@@ -89,7 +89,7 @@ public final class ReadMeExample {
 		return result;
 	}
 
-	public static float example04() {
+	static float example04() {
 
 		Set<Integer> scores1 = new HashSet<>(asList(1, 1, 2, 3, 5, 8, 11, 19));
 		Set<Integer> scores2 = new HashSet<>(asList(1, 2, 4, 8, 16, 32, 64));
@@ -102,7 +102,7 @@ public final class ReadMeExample {
 	}
 
 
-	public static List<String> example05() {
+	static List<String> example05() {
 		String str1 = "𐇑𐇛𐇜𐇐𐇡";
 
 		Tokenizer tokenizer = input -> {

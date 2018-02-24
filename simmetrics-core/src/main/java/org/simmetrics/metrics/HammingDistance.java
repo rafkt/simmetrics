@@ -164,6 +164,9 @@ public final class HammingDistance {
 	 * Returns a Hamming distance to compare lists.
 	 * 
 	 * @return a Hamming distance to compare lists
+	 *
+	 * @param <T>
+	 *            type of the token
 	 */
 	public static <T> ListDistance<T> forList() {
 		return new HammingListDistance<>();

@@ -41,7 +41,7 @@ import com.google.common.collect.Sets;
  * The string metric builder can be used to compose similarity metrics for
  * strings.
  */
-public final class StringMetricBuilderExample {
+final class StringMetricBuilderExample {
 
 	/**
 	 * Simply comparing strings through a metric may not be very effective. By
@@ -52,7 +52,7 @@ public final class StringMetricBuilderExample {
 	 * StringMetricBuilder supports these domain specific customizations. Some
 	 * example usages are shown below
 	 */
-	public static float example00() {
+	static float example00() {
 
 		String a = "Chilpéric II son of Childeric II";
 		String b = "chilperic ii son of childeric ii";
@@ -74,7 +74,7 @@ public final class StringMetricBuilderExample {
 	 * simplifiers. For a custom simplifier you can implement the Simplifier
 	 * interface.
 	 */
-	public static float example01() {
+	static float example01() {
 
 		String a = "Chilpéric II son of Childeric II";
 		String b = "Chilperic II son of Childeric II";
@@ -90,7 +90,7 @@ public final class StringMetricBuilderExample {
 	/**
 	 * Simplifiers can also be chained.
 	 */
-	public static float example02() {
+	static float example02() {
 
 		String a = "Chilpéric II son of Childeric II";
 		String b = "chilperic ii son of childeric ii";
@@ -130,7 +130,7 @@ public final class StringMetricBuilderExample {
 	 * tokenizers. For a custom tokenizer you can implement the Tokenizer
 	 * interface.
 	 */
-	public static float example03() {
+	static float example03() {
 
 		String a = "A quirky thing it is. This is a sentence.";
 		String b = "This sentence is similar; a quirky thing it is.";
@@ -157,7 +157,7 @@ public final class StringMetricBuilderExample {
 	 * `[ch,hi,il,il,lp,pe,er,ri,ic,ii,so,on,of,ch,hi,il,ld,de,er,ri,ic,ii]`
 	 *
 	 */
-	public static float example04() {
+	static float example04() {
 
 		String a = "A quirky thing it is. This is a sentence.";
 		String b = "This sentence is similar; a quirky thing it is.";
@@ -179,7 +179,7 @@ public final class StringMetricBuilderExample {
 	 * A filter can be implemented by implementing a the {@link Predicate}
 	 * interface. By chaining predicates more complicated filters can be build.
 	 * */
-	public static float example05() {
+	static float example05() {
 		Set<String> commonWords = Sets.newHashSet("it", "is");
 		Set<String> otherCommonWords = Sets.newHashSet("a");
 
@@ -207,7 +207,7 @@ public final class StringMetricBuilderExample {
 	 * A transformation can be implemented by implementing a the Function
 	 * interface.
 	 */
-	public static float example06() {
+	static float example06() {
 
 		Function<String, String> reverse = input -> new StringBuilder(input).reverse().toString();
 
@@ -232,7 +232,7 @@ public final class StringMetricBuilderExample {
 	 * cached. Note that Caching itself also has a non-trivial cost. Base your
 	 * decision on metrics!
 	 */
-	public static float example07() {
+	static float example07() {
 
 		String a = "A quirky thing it is. This is a sentence.";
 		String b = "This sentence is similar; a quirky thing it is.";

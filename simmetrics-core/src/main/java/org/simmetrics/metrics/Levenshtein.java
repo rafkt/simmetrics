@@ -36,7 +36,7 @@ import org.simmetrics.StringMetric;
  * <p>
  * This class is immutable and thread-safe.
  * 
- * @see <a href=" http://en.wikipedia.org/wiki/Levenshtein_distance">Wikipedia -
+ * @see <a href="http://en.wikipedia.org/wiki/Levenshtein_distance">Wikipedia -
  *      Levenshtein distance</a>
  * @see DamerauLevenshtein
  * 

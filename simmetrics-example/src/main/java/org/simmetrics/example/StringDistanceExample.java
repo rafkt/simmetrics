@@ -31,12 +31,12 @@ import org.simmetrics.tokenizers.Tokenizers;
  * The StringDistances utility class contains a predefined list of well
  * known distance metrics for strings.
  */
-public final class StringDistanceExample {
+final class StringDistanceExample {
 
 	/**
 	 * Two strings can be compared using a predefined distance metric.
 	 */
-	public static float example01() {
+	static float example01() {
 
 		String str1 = "This is a sentence. It is made of words";
 		String str2 = "This sentence is similar. It has almost the same words";
@@ -52,7 +52,7 @@ public final class StringDistanceExample {
 	 * 
 	 * Note that most predefined metrics are setup with a whitespace tokenizer.
 	 */
-	public static float example02() {
+	static float example02() {
 
 		String str1 = "A quirky thing it is. This is a sentence.";
 		String str2 = "This sentence is similar. A quirky thing it is.";
@@ -68,7 +68,7 @@ public final class StringDistanceExample {
 	 *
 	 * For more examples see StringDistanceBuilderExample.
 	 */
-	public static float example03() {
+	static float example03() {
 
 		String str1 = "A quirky thing it is. This is a sentence.";
 		String str2 = "This sentence is similar. A quirky thing it is.";

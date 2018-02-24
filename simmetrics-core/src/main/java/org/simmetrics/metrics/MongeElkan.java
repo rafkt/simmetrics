@@ -36,12 +36,10 @@ import org.simmetrics.StringMetric;
  * <p>
  * <code>
  * similarity(a,b) = sqrt(monge-elkan(a,b) * monge-elkan(b,a))
- * monge-elkan(a,b) = average( for s in a | max( for q in b | metric(s,q)) </code>
+ * monge-elkan(a,b) = average( for s in a | max( for q in b | metric(s,q))
  * </code>
- * </p>
  * <p>
  * This class is immutable and thread-safe.
- * 
  */
 public final class MongeElkan implements ListMetric<String> {
 
