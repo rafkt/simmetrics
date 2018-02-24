@@ -257,6 +257,26 @@ public class StringMetricsTest {
 
 	}
 
+	public static class CreateIdentity extends StringMetricTest {
+
+		@Override
+		protected Metric<String> getMetric() {
+			return StringMetrics.identity();
+		}
+
+		@Override
+		protected T[] getTests() {
+			return new T[]{
+					new T(1.0000f, "test string1", "test string1"),
+					new T(0.0000f, "test string1", "test string2"),
+					new T(0.0000f, "test", "test string2"),
+					new T(0.0000f, "", "test string2"),
+					new T(0.0000f, "aaa bbb ccc ddd", "aaa bbb ccc eee"),
+					new T(0.0000f, "a b c d", "a b c e"),};
+		}
+
+	}
+
 	public static class Utilities {
 		//TODO: Test
 		@Test
@@ -290,7 +310,6 @@ public class StringMetricsTest {
 		@Test
 		public void needlemanWunch() {
 			assertNotNull(StringMetrics.needlemanWunch());
-
 		}
 
 		@Test
