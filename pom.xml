@@ -16,9 +16,9 @@
 	<url>https://mpkorstanje.github.io/simmetrics/</url>
 
 	<modules>
-		<module>core</module>
-		<module>commons-codec-simplifiers</module>
-		<module>example</module>
+		<module>simmetrics-core</module>
+		<module>simmetrics-commons-codec-simplifiers</module>
+		<module>simmetrics-example</module>
 	</modules>
 
 	<licenses>

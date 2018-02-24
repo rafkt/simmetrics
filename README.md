@@ -10,7 +10,7 @@ scores.
 
 ## Usage ##
 
-For a quick and easy use [StringMetrics](./core/src/main/java/org/simmetrics/metrics/StringMetrics.java) and
+For a quick and easy use [StringMetrics](./simmetrics-core/src/main/java/org/simmetrics/metrics/StringMetrics.java) and
 [StringDistances](./simmetrics-core/src/main/java/org/simmetrics/metrics/StringDistances.java) contain a collection of
 well known similarity and distance metrics.
 
@@ -23,7 +23,7 @@ StringMetric metric = StringMetrics.cosineSimilarity();
 float result = metric.compare(str1, str2); //0.4767
 ```
 
-The [StringMetricBuilder](./core/src/main/java/org/simmetrics/builders/StringMetricBuilder.java) and
+The [StringMetricBuilder](./simmetrics-core/src/main/java/org/simmetrics/builders/StringMetricBuilder.java) and
 [StringDistanceBuilder](./simmetrics-core/src/main/java/org/simmetrics/builders/StringDistanceBuilder.java) are
 convenience tools to build string similarity and distance metrics. Any class implementing Metric or Distance
 respectively can be used to build a metric. The builders support simplification, tokenization, token-filtering,
