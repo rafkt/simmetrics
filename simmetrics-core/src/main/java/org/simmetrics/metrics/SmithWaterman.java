@@ -2,7 +2,7 @@
  * #%L
  * Simmetrics Core
  * %%
- * Copyright (C) 2014 - 2016 Simmetrics Authors
+ * Copyright (C) 2014 - 2018 Simmetrics Authors
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -102,8 +102,23 @@ public final class SmithWaterman implements StringMetric {
 
 		final float[][] d = new float[n][m];
 
+		//my code
+			int max_i = 0;
+			int max_j = 0;
+			float old_max = 0;
+		//end of my code
+
 		// Initialize corner
 		float max = d[0][0] = max(0, substitution.compare(a, 0, b, 0));
+
+		//my code
+					if (max > old_max){
+						old_max = max;
+						max_i = 0;
+						max_j = 0;
+					}
+
+				//end of my code
 
 		// Initialize edge
 		for (int i = 0; i < n; i++) {
@@ -117,6 +132,15 @@ public final class SmithWaterman implements StringMetric {
 			d[i][0] = max(0, maxGapCost, substitution.compare(a, i, b, 0));
 
 			max = max(max, d[i][0]);
+
+			//my code
+					if (max > old_max){
+						old_max = max;
+						max_i = i;
+						max_j = 0;
+					}
+
+				//end of my code
 
 		}
 
@@ -132,6 +156,15 @@ public final class SmithWaterman implements StringMetric {
 			d[0][j] = max(0, maxGapCost, substitution.compare(a, 0, b, j));
 
 			max = max(max, d[0][j]);
+
+			//my code
+					if (max > old_max){
+						old_max = max;
+						max_i = 0;
+						max_j = j;
+					}
+
+				//end of my code
 
 		}
 
@@ -157,10 +190,18 @@ public final class SmithWaterman implements StringMetric {
 						d[i - 1][j - 1] + substitution.compare(a, i, b, j));
 
 				max = max(max, d[i][j]);
+				//my code
+					if (max > old_max){
+						old_max = max;
+						max_i = i;
+						max_j = j;
+					}
+
+				//end of my code
 			}
 
 		}
-
+		//System.out.println(max_i + " " + max_j);
 		return max;
 	}
 
@@ -169,5 +210,4 @@ public final class SmithWaterman implements StringMetric {
 		return "SmithWaterman [gap=" + gap + ", substitution=" + substitution
 				+ ", windowSize=" + windowSize + "]";
 	}
-
 }

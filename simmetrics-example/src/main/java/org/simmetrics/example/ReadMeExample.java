@@ -2,7 +2,7 @@
  * #%L
  * Simmetrics Examples
  * %%
- * Copyright (C) 2014 - 2016 Simmetrics Authors
+ * Copyright (C) 2014 - 2018 Simmetrics Authors
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ package org.simmetrics.example;
 import static java.util.Arrays.asList;
 
 import java.util.HashSet;
+import java.util.*;
 import java.util.Locale;
 import java.util.Set;
 
@@ -36,6 +37,9 @@ import org.simmetrics.metrics.OverlapCoefficient;
 import org.simmetrics.metrics.StringMetrics;
 import org.simmetrics.simplifiers.Simplifiers;
 import org.simmetrics.tokenizers.Tokenizers;
+
+import org.simmetrics.metrics.SmithWaterman;
+import org.simmetrics.metrics.SmithWatermanSetMetric;
 
 /**
  * Examples from README.md
@@ -96,6 +100,20 @@ public final class ReadMeExample {
 		float result = metric.compare(scores1, scores2); // 0.4285
 
 		return result;
+	}
+
+	public static void main(String[] args){
+		System.out.println("TEEEEEEST");
+
+		List<Integer> scores1 = new ArrayList<>(asList(1, 9, 9, 9, 2, 9, 9, 9, 1, 2, 9, 9, 1, 2, 3));
+		List<Integer> scores2 = new ArrayList<>(asList(1, 2, 3));
+
+		System.out.println(scores1);
+
+		SmithWatermanSetMetric<Integer> swSet = new SmithWatermanSetMetric<>();
+		SmithWaterman sw = new SmithWaterman();
+		System.out.println(swSet.compare(scores1, scores2));
+		System.out.println(sw.compare("axxxbxxxabxxxxa", "abc"));
 	}
 
 }
