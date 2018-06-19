@@ -105,7 +105,7 @@ public final class ReadMeExample {
 	public static void main(String[] args){
 		System.out.println("TEEEEEEST");
 
-		List<Integer> scores1 = new ArrayList<>(asList(1, 9, 9, 9, 2, 9, 9, 9, 1, 2, 9, 9, 1, 2, 3));
+		List<Integer> scores1 = new ArrayList<>(asList(9,2,3,9,2,3));
 		List<Integer> scores2 = new ArrayList<>(asList(1, 2, 3));
 
 		System.out.println(scores1);
@@ -113,6 +113,8 @@ public final class ReadMeExample {
 		SmithWatermanSetMetric<Integer> swSet = new SmithWatermanSetMetric<>();
 		SmithWaterman sw = new SmithWaterman();
 		System.out.println(swSet.compare(scores1, scores2));
+		System.out.println(swSet.getFirstLocalIndex());
+
 		System.out.println(sw.compare("axxxbxxxabxxxxa", "abc"));
 	}
 
