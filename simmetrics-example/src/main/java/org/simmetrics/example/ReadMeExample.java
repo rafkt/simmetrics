@@ -114,6 +114,7 @@ public final class ReadMeExample {
 		SmithWaterman sw = new SmithWaterman();
 		System.out.println(swSet.compare(scores1, scores2));
 		System.out.println(swSet.getFirstLocalIndex());
+		System.out.println(swSet.getSecondLocalIndex());
 
 		System.out.println(sw.compare("axxxbxxxabxxxxa", "abc"));
 	}
