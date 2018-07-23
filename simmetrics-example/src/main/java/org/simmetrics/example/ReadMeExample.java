@@ -105,8 +105,8 @@ public final class ReadMeExample {
 	public static void main(String[] args){
 		System.out.println("TEEEEEEST");
 
-		List<Integer> scores1 = new ArrayList<>(asList(9,2,3,9,2,3));
-		List<Integer> scores2 = new ArrayList<>(asList(1, 2, 3));
+		List<Integer> scores1 = new ArrayList<>(asList(1,9,9, 9,3,1,5, 9, 3));
+		List<Integer> scores2 = new ArrayList<>(asList(4, 4, 9, 4));
 
 		System.out.println(scores1);
 

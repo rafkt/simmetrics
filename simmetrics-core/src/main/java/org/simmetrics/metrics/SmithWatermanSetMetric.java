@@ -42,7 +42,7 @@ public final class SmithWatermanSetMetric<T>{
 	private int a_local_index, b_local_index;
 
 	public SmithWatermanSetMetric() {
-		this(new AffineGap(-5.0f, -1.0f), new MatchMismatchList<T>(5.0f, -3.0f),
+		this(new AffineGap(-5.0f, -1.0f), new MatchMismatchList<T>(5.0f, 0.0f),
 				Integer.MAX_VALUE);
 	}
 
